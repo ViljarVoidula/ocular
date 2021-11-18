@@ -2,7 +2,8 @@
 data
 
 config/local*.**
-
+init-letsencrypt.sh
+.env
 # Logs
 logs
 *.log

@@ -27,6 +27,19 @@ services:
   #   volumes:
   #    - ./data/certbot/conf:/etc/letsencrypt
   #    - ./data/certbot/www:/var/www/certbot
+ mongodb:
+    container_name: mongo
+    restart: always 
+    image: mongo:4.2
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGOUSER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGOPW}
+      - MONGO_INITDB_DATABASE=${INITDB}
+    volumes:
+      - ./data/mongodbauth:/data/db:rw
+      - ./docker/development/:/docker-entrypoint-initdb.d/"  
+    ports:
+      - "27017:27017"
   ocular:
     build: '.'
     userns_mode: "host"
@@ -37,6 +50,12 @@ services:
     restart: always
     userns_mode: "host"
     stdin_open: true
+    volumes:
+      - ./config:/app/config:ro
+          depends_on:
+      - mongodb
+      - nats-1
+
   nats-1:
     command:
       - "--debug"
