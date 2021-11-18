@@ -56,6 +56,7 @@ services:
       - mongodb
       - nats-1
   nats-1:
+    container_name: nats-1
     command:
       - "--debug"
       - "--cluster"
@@ -75,6 +76,7 @@ services:
     volumes:
       - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro
   nats-2:
+    container_name: nats-2
     command:
       - "--debug"
       - "--cluster"
@@ -93,26 +95,5 @@ services:
     ports:
       - "24222:4222"
       - "28222:8222"
-    volumes:
-      - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro
-  nats-3:
-    command:
-      - "--debug"
-      - "--cluster"
-      - "nats://0.0.0.0:6222"
-      - "--http_port"
-      - "8222"
-      - "--port"
-      - "4222"
-      - "--routes"
-      - "nats://nats-1:6222"
-      - "--config"
-      - "/etc/nats/nats-server.conf"
-    image: "nats:2.6.4"
-    networks:
-      - main
-    ports:
-      - "34222:4222"
-      - "38222:8222"
     volumes:
       - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro
