@@ -1,0 +1,100 @@
+version: "3.7"
+networks:
+  main:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.255.0/24
+      driver: default
+services:
+  # nginx:
+  #   image: nginx:stable-alpine
+  #   userns_mode: "host"
+  #   restart: always
+  #   depends_on:
+  #     - ocular
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  #   volumes:
+  #     - ./data/nginx:/etc/nginx/conf.d
+  #     - ./data/certbot/conf:/etc/letsencrypt
+  #     - ./data/certbot/www:/var/www/certbot
+  # certbot:
+  #   image: certbot/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   volumes:
+  #    - ./data/certbot/conf:/etc/letsencrypt
+  #    - ./data/certbot/www:/var/www/certbot
+  ocular:
+    build: '.'
+    userns_mode: "host"
+    restart: always
+    command: "node ./dist"
+    ports:
+      - 3030
+    restart: always
+    userns_mode: "host"
+    stdin_open: true
+  nats-1:
+    command:
+      - "--debug"
+      - "--cluster"
+      - "nats://0.0.0.0:6222"
+      - "--http_port"
+      - "8222"
+      - "--port"
+      - "4222"
+      - "--config"
+      - "/etc/nats/nats-server.conf"
+    image: "nats:2.6.4"
+    networks:
+      - main
+    ports:
+      - "14222:4222"
+      - "18222:8222"
+    volumes:
+      - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro
+  nats-2:
+    command:
+      - "--debug"
+      - "--cluster"
+      - "nats://0.0.0.0:6222"
+      - "--http_port"
+      - "8222"
+      - "--port"
+      - "4222"
+      - "--routes"
+      - "nats://nats-1:6222"
+      - "--config"
+      - "/etc/nats/nats-server.conf"
+    image: "nats:2.6.4"
+    networks:
+      - main
+    ports:
+      - "24222:4222"
+      - "28222:8222"
+    volumes:
+      - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro
+  nats-3:
+    command:
+      - "--debug"
+      - "--cluster"
+      - "nats://0.0.0.0:6222"
+      - "--http_port"
+      - "8222"
+      - "--port"
+      - "4222"
+      - "--routes"
+      - "nats://nats-1:6222"
+      - "--config"
+      - "/etc/nats/nats-server.conf"
+    image: "nats:2.6.4"
+    networks:
+      - main
+    ports:
+      - "34222:4222"
+      - "38222:8222"
+    volumes:
+      - ./data/nats/nats-server.conf:/etc/nats/nats-server.conf:ro

@@ -1,0 +1,46 @@
+{
+  "name": "ocularx",
+  "version": "1.0.0",
+  "description": "OcularX provides API for image classification, resizing and caching ",
+  "main": "index.js",
+  "author": "Viljar Võidula",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node dist/",
+    "build": "tsc -p ."
+  },
+  "dependencies": {
+    "@feathersjs/authentication": "^4.5.11",
+    "@feathersjs/authentication-local": "^4.5.11",
+    "@feathersjs/configuration": "^4.5.11",
+    "@feathersjs/errors": "^4.5.11",
+    "@feathersjs/express": "^4.5.11",
+    "@feathersjs/feathers": "^4.5.11",
+    "@tensorflow/tfjs-node": "^3.11.0",
+    "ajv": "^8.8.0",
+    "axios": "^0.24.0",
+    "cache-manager": "^3.6.0",
+    "cache-manager-mongodb": "^0.3.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express-prom-bundle": "^6.4.1",
+    "express-rate-limit": "^5.5.1",
+    "feathers-mongodb": "^6.4.1",
+    "file-type": "^16.5.3",
+    "helmet": "^4.6.0",
+    "mongodb-core": "^3.2.7",
+    "nats": "^2.4.0",
+    "normalize-type": "^1.5.2",
+    "nsfwjs": "^2.4.1",
+    "p-event": "4.2.0",
+    "sharp": "^0.29.3",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/cache-manager": "^3.4.2",
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.12",
+    "@types/sharp": "^0.29.3"
+  }
+}
