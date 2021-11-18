@@ -42,13 +42,11 @@ services:
       - "27017:27017"
   ocular:
     build: '.'
-    userns_mode: "host"
     restart: always
     command: "node ./dist"
     ports:
       - 3030
     restart: always
-    userns_mode: "host"
     stdin_open: true
     volumes:
       - ./config:/app/config:ro
