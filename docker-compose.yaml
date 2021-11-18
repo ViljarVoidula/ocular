@@ -27,7 +27,7 @@ services:
   #   volumes:
   #    - ./data/certbot/conf:/etc/letsencrypt
   #    - ./data/certbot/www:/var/www/certbot
- mongodb:
+  mongodb:
     container_name: mongo
     restart: always 
     image: mongo:4.2
@@ -55,7 +55,6 @@ services:
     depends_on:
       - mongodb
       - nats-1
-
   nats-1:
     command:
       - "--debug"
