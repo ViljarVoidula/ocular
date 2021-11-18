@@ -52,7 +52,7 @@ services:
     stdin_open: true
     volumes:
       - ./config:/app/config:ro
-          depends_on:
+    depends_on:
       - mongodb
       - nats-1
 
