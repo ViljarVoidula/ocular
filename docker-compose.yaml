@@ -11,6 +11,8 @@ services:
   #   image: nginx:stable-alpine
   #   userns_mode: "host"
   #   restart: always
+  #   networks:
+  #     - main
   #   depends_on:
   #     - ocular
   #   ports:
@@ -24,6 +26,8 @@ services:
   # certbot:
   #   image: certbot/certbot
   #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #    networks:
+  #    - main
   #   volumes:
   #    - ./data/certbot/conf:/etc/letsencrypt
   #    - ./data/certbot/www:/var/www/certbot
@@ -43,6 +47,7 @@ services:
     ports:
       - "27017:27017"
   ocular:
+    container_name: ocular
     build: '.'
     restart: always
     command: "node ./dist"
