@@ -4,11 +4,11 @@ import sharp, { FitEnum } from 'sharp';
 import { Application } from '../../declarations';
 import  pEvent from 'p-event';
 
-import { Writable, Readable } from 'stream'
+import { Writable, Readable} from 'stream'
 import { StringCodec } from 'nats'
 import { fromStream } from 'file-type';
 
-
+import magic, { MimeType }  from 'stream-mmmagic';
 import  { BadRequest } from '@feathersjs/errors';
 
 
@@ -62,7 +62,7 @@ export default class Resize {
         const cacheKey = this.optionsToString(query)
         let data = await this.cache?.wrap(cacheKey, async()=>{
             let res = await this.downloadImage(query.url)
-            this?.app?.get('natsClient').publish("resize_image", StringCodec().encode(JSON.stringify({res, query , instance: this.instanceId})));
+            this?.app?.get('natsClient')?.publish("resize_image", StringCodec().encode(JSON.stringify({res, query , instance: this.instanceId})));
             return res
         }, { ttl: 600 })
         // hack to convert types when loading from cache
@@ -76,9 +76,9 @@ export default class Resize {
             const { width = 320, height = 240, quality = 70, fit = 'cover', extension = 'png', bw = false, bg = '' } = normalize(params?.query);
             // const result: string = await this.resize({url, width, height, quality, fit, extension, bw, bg })
             const data = await this.handleImageCache(params?.query)
-            const fileType = await fromStream(Readable.from(data));
-            const isValidType =  fileType ? /png|jpeg|gif|jpg/gi.test(fileType.ext) : undefined
-          
+            const readtableStream = Readable.from(data);
+            const [ mime ] = await magic.promise(readtableStream);
+            const isValidType =  mime ? /png|jpeg|gif|jpg|svg/gi.test((mime as { type: string }).type ) : undefined
             if(!isValidType) {
                 throw new BadRequest('File format not supported')
             }

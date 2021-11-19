@@ -31,37 +31,37 @@ services:
   #   volumes:
   #    - ./data/certbot/conf:/etc/letsencrypt
   #    - ./data/certbot/www:/var/www/certbot
-  mongodb:
-    container_name: mongo
-    restart: always 
-    image: mongo:4.2
-    networks:
-      - main
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGOUSER}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGOPW}
-      - MONGO_INITDB_DATABASE=${INITDB}
-    volumes:
-      - ./data/mongodbauth:/data/db:rw
-      - ./docker/development/:/docker-entrypoint-initdb.d/"  
-    ports:
-      - "27017:27017"
-  ocular:
-    container_name: ocular
-    build: '.'
-    restart: always
-    command: "node ./dist"
-    ports:
-      - 3030
-    restart: always
-    stdin_open: true
-    networks:
-      - main
-    volumes:
-      - ./config:/app/config:ro
-    depends_on:
-      - mongodb
-      - nats-1
+  # mongodb:
+  #   container_name: mongo
+  #   restart: always 
+  #   image: mongo:4.2
+  #   networks:
+  #     - main
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=${MONGOUSER}
+  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGOPW}
+  #     - MONGO_INITDB_DATABASE=${INITDB}
+  #   volumes:
+  #     - ./data/mongodbauth:/data/db:rw
+  #     - ./docker/development/:/docker-entrypoint-initdb.d/"  
+  #   ports:
+  #     - "27017:27017"
+  # ocular:
+  #   container_name: ocular
+  #   build: '.'
+  #   restart: always
+  #   command: "node ./dist"
+  #   ports:
+  #     - 3030
+  #   restart: always
+  #   stdin_open: true
+  #   networks:
+  #     - main
+  #   volumes:
+  #     - ./config:/app/config:ro
+  #   depends_on:
+  #     - mongodb
+  #     - nats-1
   nats-1:
     container_name: nats-1
     command:

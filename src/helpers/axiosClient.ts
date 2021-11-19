@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { Writable } from 'stream';
+import { Writable, Readable } from 'stream';
 import { fromBuffer, fromStream } from 'file-type'
 import  { BadRequest } from '@feathersjs/errors';
+import magic from 'stream-mmmagic';
 async function downloadImageToArrayBuffer (url:string) {  
     let chunks: Buffer[] = []
     let writer = new Writable()
@@ -15,14 +16,13 @@ async function downloadImageToArrayBuffer (url:string) {
       method: 'GET',
       responseType: 'arraybuffer'
     })
-    const fileType = await fromBuffer(response.data)
-    debugger
-    const isValidType = fileType ? /png|jpeg|gif|jpg/gi.test(fileType.ext) : undefined
-          
+
+    const readtableStream = Readable.from(response.data);
+    const [ mime ] = await magic.promise(readtableStream);
+    const isValidType =  mime ? /png|jpeg|gif|jpg|svg/gi.test((mime as { type: string }).type ) : undefined
     if(!isValidType) {
         throw new BadRequest('File format not supported')
     }
-    debugger
 
     return response
   }

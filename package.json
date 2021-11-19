@@ -35,6 +35,7 @@
     "nsfwjs": "^2.4.1",
     "p-event": "4.2.0",
     "sharp": "^0.29.3",
+    "stream-mmmagic": "^2.3.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
