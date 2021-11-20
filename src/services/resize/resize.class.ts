@@ -6,9 +6,8 @@ import  pEvent from 'p-event';
 
 import { Writable, Readable} from 'stream'
 import { StringCodec } from 'nats'
-import { fromStream } from 'file-type';
 
-import magic, { MimeType }  from 'stream-mmmagic';
+import magic from 'stream-mmmagic';
 import  { BadRequest } from '@feathersjs/errors';
 
 
@@ -47,20 +46,9 @@ export default class Resize {
 
         return chunks
       }
-    // helper to create cache key
-    optionsToString(options: { [key: string]: any }){
-        let result = ''
-        Object.keys(options).forEach((key, index)=>{
-            if(options[key] ){
-                result += key + '=' + options[key]
-            }
-        })
-        return result?.replace(/\/|\./gi, '-');
-    }
     
     async handleImageCache(query){
-        const cacheKey = this.optionsToString(query)
-        let data = await this.cache?.wrap(cacheKey, async()=>{
+        let data = await this.cache?.wrap(query.url, async()=>{
             let res = await this.downloadImage(query.url)
             this?.app?.get('natsClient')?.publish("resize_image", StringCodec().encode(JSON.stringify({res, query , instance: this.instanceId})));
             return res

@@ -24,7 +24,7 @@ const inputSchema = {
 
 export default {
     before: {
-      all: [rapidApiKey(), authenticate('jwt', 'rapidApi')],
+      all: [],
       find: [],
       get: [],
       create: [
