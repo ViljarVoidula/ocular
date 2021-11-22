@@ -7,7 +7,7 @@ export default function (app: Application) {
   app.use("/resize", new Resize(), (req, res) => {
     // middleware to set response
     if (res.data?.stream) {
-      const { extension } = res.data?.query ?? "png";
+      const { extension = "png" } = res.data?.query ?? "png";
       res.setHeader("content-type", `image/${extension}`);
       res.type(`image/${extension}`);
 
