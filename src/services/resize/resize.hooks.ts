@@ -8,7 +8,6 @@ const inputSchema = {
   description: "Description of API data object",
   type: "object",
   required: ["url"],
-  additionalProperties: false,
   properties: {
     url: { type: "string", minLength: 8, maxLength: 2048 },
     width: { type: "number", minimum: 1, maximum: 1920 },
