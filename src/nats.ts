@@ -40,7 +40,7 @@ export default function (app: Application) {
     const cache = app.get("_cache");
     if (_instance !== _data.instance) {
       cache.set(
-        optionsToString(_data.query),
+        _data.url,
         _data.map((el) => Buffer.from(el.data)),
         { ttl: 600 }
       );

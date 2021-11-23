@@ -46,14 +46,23 @@ export default class Resize {
       query.url,
       async () => {
         let res = await this.downloadImage(query.url);
-        this?.app
-          ?.get("natsClient")
-          ?.publish(
+        let payload_size = JSON.stringify(res).length;
+        let client = this?.app?.get("natsClient");
+        const max_size = client?.info?.max_payload;
+        if (client && payload_size < max_size) {
+          await this?.app?.get("natsClient")?.publish(
             "resize_image",
             StringCodec().encode(
-              JSON.stringify({ res, query, instance: this.instanceId })
+              JSON.stringify({
+                res,
+                url: query?.url,
+                instance: this.instanceId,
+              })
             )
           );
+        } else {
+          throw new BadRequest("Input file too large for processing.");
+        }
         return res;
       },
       { ttl: 600 }
