@@ -1,37 +1,30 @@
 import { Params } from "@feathersjs/feathers";
 import { Service, MongoDBServiceOptions } from "feathers-mongodb";
 import { Application } from "../../declarations";
-import crypto from "crypto";
 // A type interface for our user (it does not validate any data)
-interface UserData {
+interface BucketData {
   _id?: string;
-  userref?: string;
-  type?: string;
-  email: string;
-  password: string;
-  organization?: string;
-  name?: string;
-  apiKey?: string;
+  owner: string;
+  acl: string[];
+  paths: string[];
 }
 
-export class Users extends Service<UserData> {
+export class Bucket extends Service<BucketData> {
   constructor(options: Partial<MongoDBServiceOptions>, app: Application) {
     super(options);
   }
 
-  create(data: UserData, params?: Params) {
+  create(data: BucketData, params?: Params) {
     // This is the information we want from the user signup data
-    const { email, password, name } = data;
+    const { owner, acl = [], paths = ["/"] } = data;
     // Use the existing avatar image or return the Gravatar for the email
     // The complete user
-    const userData = {
-      email,
-      name,
-      password,
-      apiKey: crypto.randomBytes(32).toString("hex"),
+    const BucketData = {
+      owner,
+      acl,
+      paths,
     };
-
     // Call the original `create` method with existing `params` and new data
-    return super.create(userData, params);
+    return super.create(BucketData, params);
   }
 }

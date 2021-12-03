@@ -19,7 +19,11 @@ const inputSchema = {
       default: "cover",
     },
     bw: { type: "number", enum: [1, 0], default: 0 },
-    extension: { type: "string", enum: ["jpeg", "jpg", "png"], default: "png" },
+    extension: {
+      type: "string",
+      enum: ["jpeg", "jpg", "png", "webp"],
+      default: "png",
+    },
     format: { type: "string", enum: ["stream", "base64"], default: "stream" },
   },
 };

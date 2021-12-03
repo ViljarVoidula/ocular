@@ -48,7 +48,7 @@ export default class Resize {
         let res = await this.downloadImage(query.url);
         let payload_size = JSON.stringify(res).length;
         let client = this?.app?.get("natsClient");
-        const max_size = client?.info?.max_payload;
+        const max_size = client?.info?.max_payload ?? 12000080;
         if (client && payload_size < max_size) {
           await this?.app?.get("natsClient")?.publish(
             "resize_image",
@@ -84,13 +84,14 @@ export default class Resize {
       bw = false,
       bg = "",
     } = normalize(params?.query);
-    // const result: string = await this.resize({url, width, height, quality, fit, extension, bw, bg })
+
     const data = await this.handleImageCache(params?.query);
 
     const [mime] = await magic.promise(Readable.from(data));
     const isValidType = mime
       ? /png|jpeg|gif|jpg|svg/gi.test((mime as { type: string }).type)
       : undefined;
+
     if (!isValidType) {
       throw new BadRequest("File format not supported");
     }
